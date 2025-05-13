@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -33,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devspace.scribblespace.R
+import com.devspace.scribblespace.list.presentation.NoteListUiState
 import com.devspace.scribblespace.list.presentation.NoteListViewModel
 import com.devspace.scribblespace.ui.theme.ScribbleSpaceTheme
 
@@ -46,29 +49,43 @@ fun NoteListScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
 
-        if (notes.isEmpty()) {
-            EmptyState {
-                navController.navigate("createNote")
-            }
-        } else {
-            NoteListContent(
-                notes = notes,
-                onDelete = { item ->
-                    viewModel.deleteNote(item)
+        when (notes) {
+            is NoteListUiState.Data -> {
+                NoteListContent(
+                    notes = (notes as NoteListUiState.Data).list,
+                    onDelete = { item ->
+                        viewModel.deleteNote(item)
+                    }
+                )
+                FloatingActionButton(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .align(Alignment.BottomEnd),
+                    onClick = {
+                        navController.navigate("createNote")
+                    },
+                ) {
+                    Icon(Icons.Filled.Add, "Floating action button.")
                 }
-            )
-            FloatingActionButton(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .align(Alignment.BottomEnd),
-                onClick = {
+
+            }
+
+            NoteListUiState.Empty -> {
+                EmptyState {
                     navController.navigate("createNote")
-                },
-            ) {
-                Icon(Icons.Filled.Add, "Floating action button.")
+                }
+            }
+
+            NoteListUiState.Loading -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .wrapContentSize(Alignment.Center)
+                ) {
+                    CircularProgressIndicator()
+                }
             }
         }
-
     }
 }
 
