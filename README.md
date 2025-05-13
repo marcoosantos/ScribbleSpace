@@ -22,7 +22,8 @@
 - [Repository Pattern](https://developer.android.com/topic/architecture/data-layer?hl=pt-br)
 - [Mockito](https://site.mockito.org/)
 - [Turbine](https://github.com/cashapp/turbine)
-- [Mockk](https://mockk.io/) 
+- [Mockk](https://mockk.io/)
+- [Sealed Class](https://kotlinlang.org/docs/sealed-classes.html)
 
 ## 🗃️ License
 ```
